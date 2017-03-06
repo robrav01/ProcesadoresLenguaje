@@ -64,6 +64,22 @@ public class ComprobacionTipos extends Procesamiento {
       }     
    } 
    
+   public void procesa(CambioSigno exp) {
+	   exp.opnd().procesaCon(this);
+	   
+	   Tipo t = exp.opnd().tipo();
+	   
+	   if(t.equals(programa.tipoInt()))
+		   exp.ponTipo(programa.tipoInt());
+	   else if (t.equals(programa.tipoReal()))
+		   exp.ponTipo(programa.tipoReal());
+	   else {
+		   if (!t.equals(programa.tipoError()))
+			   errores.msg(exp.enlaceFuente()+":"+ERROR_TIPO_OPERANDOS);
+		   exp.ponTipo(programa.tipoError());
+	   }
+   }
+   
    public void procesa(Multiplicacion exp) {
 	      exp.opnd1().procesaCon(this);
 	      exp.opnd2().procesaCon(this);
