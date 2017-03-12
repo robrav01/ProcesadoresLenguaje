@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import maquinaP.MaquinaP.Instruccion;
 
 
 public class MaquinaP {
@@ -112,8 +111,8 @@ public class MaquinaP {
 	   }
 	   public String toString() {return "suma";}
    }
-   private ISuma ISUMA;
-   private class ISuma implements Instruccion {
+   private ISumaInt ISUMA_INT;
+   private class ISumaInt implements Instruccion {
       public void ejecuta() {
          Valor opnd2 = pilaEvaluacion.pop(); 
          Valor opnd1 = pilaEvaluacion.pop();
@@ -127,6 +126,38 @@ public class MaquinaP {
       } 
       public String toString() {return "suma";};
    }
+   private ISumaReal ISUMA_REAL;
+   private class ISumaReal implements Instruccion {
+      public void ejecuta() {
+         Valor opnd2 = pilaEvaluacion.pop(); 
+         Valor opnd1 = pilaEvaluacion.pop();
+         Valor resul;
+         if (opnd1 == UNKNOWN || opnd2 == UNKNOWN) 
+             resul = UNKNOWN;
+         else 
+             resul = new ValorReal(opnd1.valorReal()+opnd2.valorReal());
+         pilaEvaluacion.push(resul);
+         pc++;
+      } 
+      public String toString() {return "suma";};
+   }
+   
+   private ISumaCadena ISUMA_CADENA;
+   private class ISumaCadena implements Instruccion {
+      public void ejecuta() {
+         Valor opnd2 = pilaEvaluacion.pop(); 
+         Valor opnd1 = pilaEvaluacion.pop();
+         Valor resul;
+         if (opnd1 == UNKNOWN || opnd2 == UNKNOWN) 
+             resul = UNKNOWN;
+         else 
+             resul = new ValorString(opnd1.valorString().concat(opnd2.valorString()));
+         pilaEvaluacion.push(resul);
+         pc++;
+      } 
+      public String toString() {return "suma";};
+   }
+   
    private IRestaInt IRESTA_INT;
    private class IRestaInt implements Instruccion {
       public void ejecuta() {
@@ -172,8 +203,43 @@ public class MaquinaP {
          pilaEvaluacion.push(resul);
          pc++;
       } 
-      public String toString() {return "multiplicación";};
+      public String toString() {return "multiplicaciï¿½n";};
    }
+   
+   private IDivisionInt IDIVISION_INT;
+   private class IDivisionInt implements Instruccion {
+      public void ejecuta() {
+         Valor opnd2 = pilaEvaluacion.pop(); 
+         Valor opnd1 = pilaEvaluacion.pop();
+         Valor resul;
+         if (opnd1 == UNKNOWN || opnd2 == UNKNOWN) 
+             resul = UNKNOWN;
+         else{
+             resul = new ValorInt(opnd1.valorInt()/opnd2.valorInt());
+         }
+         pilaEvaluacion.push(resul);
+         pc++;
+      } 
+      public String toString() {return "division";};
+   }
+   
+   private IDivisionReal IDIVISION_REAL;
+   private class IDivisionReal implements Instruccion {
+      public void ejecuta() {
+         Valor opnd2 = pilaEvaluacion.pop(); 
+         Valor opnd1 = pilaEvaluacion.pop();
+         Valor resul;
+         if (opnd1 == UNKNOWN || opnd2 == UNKNOWN) 
+             resul = UNKNOWN;
+         else{
+             resul = new ValorReal(opnd1.valorReal()/opnd2.valorReal());
+         }
+         pilaEvaluacion.push(resul);
+         pc++;
+      } 
+      public String toString() {return "division";};
+   }
+   
    private IModulo IMODULO;
    private class IModulo implements Instruccion {
       public void ejecuta() {
@@ -189,7 +255,7 @@ public class MaquinaP {
          pilaEvaluacion.push(resul);
          pc++;
       } 
-      public String toString() {return "módulo";};
+      public String toString() {return "mï¿½dulo";};
    }
    private IAnd IAND;
    private class IAnd implements Instruccion {
@@ -366,11 +432,15 @@ public class MaquinaP {
    }
 
    
-   public Instruccion suma() {return ISUMA;}
+   public Instruccion sumaInt() {return ISUMA_INT;}
+   public Instruccion sumaReal() {return ISUMA_REAL;}
+   public Instruccion sumaCadena() {return ISUMA_CADENA;}
    public Instruccion restaInt() {return IRESTA_INT;}
    public Instruccion restaReal() {return IRESTA_REAL;}
    public Instruccion and() {return IAND;}
    public Instruccion multiplicacion(){return IMULTIPLICACION;}
+   public Instruccion divisionInt() {return IDIVISION_INT;}
+   public Instruccion divisionReal() {return IDIVISION_REAL;}
    public Instruccion modulo(){return IMODULO;}
    public Instruccion elementoDeCadena(){return IELEMENTODECADENA;}
    public Instruccion conversionInt(){return ICONVERSIONINT;}
@@ -395,8 +465,19 @@ public class MaquinaP {
       pilaEvaluacion = new Stack<>();
       datos = new Valor[tamdatos];
       this.pc = 0;
-      ISUMA = new ISuma();
+      ISUMA_INT = new ISumaInt();
+      ISUMA_REAL = new ISumaReal();
+      ISUMA_CADENA = new ISumaCadena();
       IAND = new IAnd();
+      IRESTA_INT = new IRestaInt();
+      IRESTA_REAL = new IRestaReal();
+      IMULTIPLICACION = new IMultiplicacion();
+      IDIVISION_INT = new IDivisionInt();
+      IDIVISION_REAL = new IDivisionReal();
+      ICAMBIO_SIGNO = new ICambioSigno();
+      ICONVERSIONINT = new IConversionInt();
+      ICONVERSIONREAL = new IConversionReal();
+      IMODULO = new IModulo();
       UNKNOWN = new ValorUnknown();
    }
    public void ejecuta() {
@@ -421,5 +502,4 @@ public class MaquinaP {
      }
      System.out.println("PC:"+pc);
    }
-
 }
