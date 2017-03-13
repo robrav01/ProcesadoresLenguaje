@@ -7,7 +7,10 @@ import programa.Programa.ConversionEntero;
 import programa.Programa.ConversionReal;
 import programa.Programa.CteChar;
 import programa.Programa.CteInt;
+import programa.Programa.CteReal;
+import programa.Programa.Division;
 import programa.Programa.CteBool;
+import programa.Programa.CteCadenaChar;
 import programa.Programa.ElementoDeCadena;
 import programa.Programa.Modulo;
 import programa.Programa.Multiplicacion;
@@ -24,8 +27,9 @@ import programa.Programa.Var;
 public class GeneracionDeCodigo extends Procesamiento {
    private MaquinaP maquina;
    private Programa programa;
-   public GeneracionDeCodigo(MaquinaP maquina) {
+   public GeneracionDeCodigo(MaquinaP maquina, Programa programa) {
       this.maquina = maquina; 
+      this.programa = programa;
    }
    public void procesa(Var exp) {
       maquina.addInstruccion(maquina.apilaDir(exp.declaracion().dir(),exp.enlaceFuente()));         
@@ -39,15 +43,27 @@ public class GeneracionDeCodigo extends Procesamiento {
    public void procesa(CteChar exp){
 	   maquina.addInstruccion(maquina.apilaChar(exp.valChar()));
    }
+   public void procesa(CteReal exp){
+	   maquina.addInstruccion(maquina.apilaReal(exp.valReal()));
+   }
+   public void procesa(CteCadenaChar exp){
+	   maquina.addInstruccion(maquina.apilaString(exp.valString()));
+   }
    public void procesa(Modulo exp) {
        exp.opnd1().procesaCon(this);
        exp.opnd2().procesaCon(this);
        maquina.addInstruccion(maquina.modulo());         
    } 
    public void procesa(Suma exp) {
-       exp.opnd1().procesaCon(this);
+	   exp.opnd1().procesaCon(this);
        exp.opnd2().procesaCon(this);
-       maquina.addInstruccion(maquina.suma());         
+       
+       if (exp.tipo().equals(programa.tipoInt()))
+    	   maquina.addInstruccion(maquina.sumaInt()); 
+       else if (exp.tipo().equals(programa.tipoReal()))
+    	   maquina.addInstruccion(maquina.sumaReal()); 
+       else if (exp.tipo().equals(programa.tipoCadena()))
+    	   maquina.addInstruccion(maquina.sumaCadena());
    }
    public void procesa(Resta exp) {
        exp.opnd1().procesaCon(this);
@@ -55,7 +71,7 @@ public class GeneracionDeCodigo extends Procesamiento {
        
        if (exp.tipo().equals(programa.tipoInt()))
     	   maquina.addInstruccion(maquina.restaInt()); 
-       if (exp.tipo().equals(programa.tipoReal()))
+       else if (exp.tipo().equals(programa.tipoReal()))
     	   maquina.addInstruccion(maquina.restaReal());
    }
    public void procesa(Multiplicacion exp) {
@@ -63,6 +79,17 @@ public class GeneracionDeCodigo extends Procesamiento {
        exp.opnd2().procesaCon(this);
        maquina.addInstruccion(maquina.multiplicacion());         
    }
+   
+   public void procesa(Division exp) {
+	   exp.opnd1().procesaCon(this);
+       exp.opnd2().procesaCon(this);
+       
+       if (exp.tipo().equals(programa.tipoInt()))
+    	   maquina.addInstruccion(maquina.divisionInt()); 
+       else if (exp.tipo().equals(programa.tipoReal()))
+    	   maquina.addInstruccion(maquina.divisionReal()); 
+   }
+   
    public void procesa(ElementoDeCadena exp) {
        exp.opnd1().procesaCon(this);
        exp.opnd2().procesaCon(this);

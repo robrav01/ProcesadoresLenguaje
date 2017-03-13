@@ -4,7 +4,10 @@ import procesamientos.Procesamiento;
 import programa.Programa.ConversionEntero;
 import programa.Programa.ConversionReal;
 import programa.Programa.CteInt;
+import programa.Programa.CteReal;
 import programa.Programa.CteBool;
+import programa.Programa.CteCadenaChar;
+import programa.Programa.CteChar;
 import programa.Programa.ElementoDeCadena;
 import programa.Programa.Modulo;
 import programa.Programa.Multiplicacion;
@@ -12,11 +15,13 @@ import programa.Programa.Suma;
 import programa.Programa.And;
 import programa.Programa.Dec;
 import programa.Programa.DecVar;
+import programa.Programa.Division;
 import programa.Programa.Exp;
 import programa.Programa.IAsig;
 import programa.Programa.IBloque;
 import programa.Programa.Inst;
 import programa.Programa.Prog;
+import programa.Programa.Resta;
 import programa.Programa.Var;
 import programa.Programa.IWhile;
 
@@ -62,6 +67,18 @@ public class Impresion extends Procesamiento {
      System.out.print(exp.valBool());
      imprimeAtributos(exp);
    } 
+   public void procesa(CteChar exp) {
+	 System.out.print(exp.valChar());
+	 imprimeAtributos(exp);
+   } 
+   public void procesa(CteReal exp) {
+	 System.out.print(exp.valReal());
+	 imprimeAtributos(exp);
+   } 
+   public void procesa(CteCadenaChar exp) {
+	 System.out.print(exp.valString());
+	 imprimeAtributos(exp);
+   } 
    public void procesa(Var exp) {
      System.out.print(exp.var());
      imprimeAtributos(exp);
@@ -82,6 +99,14 @@ public class Impresion extends Procesamiento {
      exp.opnd2().procesaCon(this);
      System.out.print(')'); 
    }
+   public void procesa(Resta exp) {
+	     System.out.print('('); 
+	     exp.opnd1().procesaCon(this);
+	     System.out.print('-');
+	     imprimeAtributos(exp);
+	     exp.opnd2().procesaCon(this);
+	     System.out.print(')'); 
+	   }
    public void procesa(Multiplicacion exp) {
      System.out.print('('); 
      exp.opnd1().procesaCon(this);
@@ -89,6 +114,14 @@ public class Impresion extends Procesamiento {
      imprimeAtributos(exp);
      exp.opnd2().procesaCon(this);
      System.out.print(')'); 
+   }
+   public void procesa(Division exp) {
+	 System.out.print('('); 
+	 exp.opnd1().procesaCon(this);
+	 System.out.print('/');
+	 imprimeAtributos(exp);
+	 exp.opnd2().procesaCon(this);
+	 System.out.print(')'); 
    }
    public void procesa(And exp) {
      System.out.print('('); 

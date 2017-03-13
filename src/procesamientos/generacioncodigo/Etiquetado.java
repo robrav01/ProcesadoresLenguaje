@@ -5,7 +5,11 @@ import programa.Programa;
 import programa.Programa.ConversionEntero;
 import programa.Programa.ConversionReal;
 import programa.Programa.CteInt;
+import programa.Programa.CteReal;
+import programa.Programa.Division;
 import programa.Programa.CteBool;
+import programa.Programa.CteCadenaChar;
+import programa.Programa.CteChar;
 import programa.Programa.ElementoDeCadena;
 import programa.Programa.Modulo;
 import programa.Programa.Multiplicacion;
@@ -23,7 +27,8 @@ public class Etiquetado extends Procesamiento {
    private int etq; 
    public Etiquetado() {
        etq = 0;
-   }
+   } 
+   
    public void procesa(Var exp) {
       exp.ponDirPrimeraInstruccion(etq);
       // apilaDir(...dir variable...)
@@ -39,25 +44,22 @@ public class Etiquetado extends Procesamiento {
       // apilaBool(...)
       exp.ponDirInstruccionSiguiente(++etq);
    }
-   public void procesa(ConversionEntero exp) {
-       exp.ponDirPrimeraInstruccion(etq);
-       exp.opnd().procesaCon(this);
-       
-       exp.ponDirInstruccionSiguiente(++etq);
+   
+   public void procesa(CteChar exp) {
+	  exp.ponDirPrimeraInstruccion(etq);
+	  exp.ponDirInstruccionSiguiente(++etq);
    }
-   public void procesa(ConversionReal exp) {
-       exp.ponDirPrimeraInstruccion(etq);
-       exp.opnd().procesaCon(this);
-       
-       exp.ponDirInstruccionSiguiente(++etq);
+   
+   public void procesa(CteReal exp) {
+	  exp.ponDirPrimeraInstruccion(etq);
+	  exp.ponDirInstruccionSiguiente(++etq);
    }
-   public void procesa(Modulo exp) {
-	   exp.ponDirPrimeraInstruccion(etq);
-       exp.opnd1().procesaCon(this);
-       exp.opnd2().procesaCon(this);
-       
-       exp.ponDirInstruccionSiguiente(++etq);
-   } 
+   
+   public void procesa(CteCadenaChar exp) {
+	  exp.ponDirPrimeraInstruccion(etq);  
+	  exp.ponDirInstruccionSiguiente(++etq);
+   }
+   
    public void procesa(Suma exp) {
        exp.ponDirPrimeraInstruccion(etq);
        exp.opnd1().procesaCon(this);
@@ -79,6 +81,22 @@ public class Etiquetado extends Procesamiento {
        
        exp.ponDirInstruccionSiguiente(++etq);
    }
+   public void procesa(Division exp) {
+       exp.ponDirPrimeraInstruccion(etq);
+       exp.opnd1().procesaCon(this);
+       exp.opnd2().procesaCon(this);
+       
+       exp.ponDirInstruccionSiguiente(++etq);
+   }
+   
+   public void procesa(Modulo exp) {
+	   exp.ponDirPrimeraInstruccion(etq);
+       exp.opnd1().procesaCon(this);
+       exp.opnd2().procesaCon(this);
+       
+       exp.ponDirInstruccionSiguiente(++etq);
+   } 
+   
    public void procesa(ElementoDeCadena exp) {
        exp.ponDirPrimeraInstruccion(etq);
        exp.opnd1().procesaCon(this);
@@ -92,7 +110,20 @@ public class Etiquetado extends Procesamiento {
        exp.opnd2().procesaCon(this);
        // and
        exp.ponDirInstruccionSiguiente(++etq);
-   }   
+   } 
+   
+   public void procesa(ConversionEntero exp) {
+       exp.ponDirPrimeraInstruccion(etq);
+       exp.opnd().procesaCon(this);
+       exp.ponDirInstruccionSiguiente(++etq);
+   }
+   public void procesa(ConversionReal exp) {
+       exp.ponDirPrimeraInstruccion(etq);
+       exp.opnd().procesaCon(this);
+       
+       exp.ponDirInstruccionSiguiente(++etq);
+   }
+   
    public void procesa(Prog p) {
       p.inst().procesaCon(this);
    }     

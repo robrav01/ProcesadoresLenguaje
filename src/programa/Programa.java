@@ -39,6 +39,27 @@ public abstract class Programa {
        public String toString() {return "BOOL";}
    }
    
+   public class Char implements Tipo {
+       public void acepta(Procesamiento p) {
+          p.procesa(this); 
+       }         
+       public String toString() {return "CHAR";}
+   }
+   
+   public class Real implements Tipo {
+       public void acepta(Procesamiento p) {
+          p.procesa(this); 
+       }         
+       public String toString() {return "REAL";}
+   }
+   
+   public class CadenaChar implements Tipo {
+       public void acepta(Procesamiento p) {
+          p.procesa(this); 
+       }         
+       public String toString() {return "STRING";}
+   }
+   
    public class Ok implements Tipo {
        public void acepta(Procesamiento p) {
           p.procesa(this); 
@@ -53,26 +74,6 @@ public abstract class Programa {
        public String toString() {return "ERROR";}
    }
    
-   public class Char implements Tipo {
-       public void acepta(Procesamiento p) {
-          p.procesa(this); 
-       }         
-       public String toString() {return "OK";}
-   }
-   
-   public class Real implements Tipo {
-       public void acepta(Procesamiento p) {
-          p.procesa(this); 
-       }         
-       public String toString() {return "OK";}
-   }
-   
-   public class CadenaChar implements Tipo {
-       public void acepta(Procesamiento p) {
-          p.procesa(this); 
-       }         
-       public String toString() {return "OK";}
-   }
    
    public class Prog {
      private Dec[] decs;
@@ -312,11 +313,12 @@ public abstract class Programa {
        public CteCadenaChar(String val) {
          this.val = val;
        }
-       public String valCteCadenaChar() {return val;}      
+       public String valString() {return val;}      
        public void procesaCon(Procesamiento p) {
           p.procesa(this); 
        }
    }
+   
    public class ConversionEntero extends Exp {
 	   private Exp opnd;
        private String enlaceFuente;
@@ -333,6 +335,7 @@ public abstract class Programa {
           p.procesa(this); 
        }
    }
+   
    public class ConversionReal extends Exp {
 	   private Exp opnd;
        private String enlaceFuente;
@@ -350,7 +353,7 @@ public abstract class Programa {
        }
    }
    
-   private abstract class ExpBin extends Exp {
+   public abstract class ExpBin extends Exp {
        private Exp opnd1;
        private Exp opnd2;
        private String enlaceFuente;
@@ -389,17 +392,7 @@ public abstract class Programa {
           p.procesa(this); 
        }
    }
-   public class Modulo extends ExpBin {
-       public Modulo(Exp opnd1, Exp opnd2) {
-         this(opnd1,opnd2,null);
-       }
-       public Modulo(Exp opnd1, Exp opnd2,String enlaceFuente) {
-         super(opnd1,opnd2,enlaceFuente);  
-       }
-      public void procesaCon(Procesamiento p) {
-          p.procesa(this); 
-       }
-   }
+   
    public class Multiplicacion extends ExpBin {
        public Multiplicacion(Exp opnd1, Exp opnd2) {
          this(opnd1,opnd2,null);
@@ -411,6 +404,30 @@ public abstract class Programa {
           p.procesa(this); 
        }
    }
+   
+   public class Division extends ExpBin {
+       public Division(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public Division(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   public class Modulo extends ExpBin {
+       public Modulo(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public Modulo(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
    public class ElementoDeCadena extends ExpBin {
        public ElementoDeCadena(Exp opnd1, Exp opnd2) {
          this(opnd1,opnd2,null);
@@ -476,6 +493,15 @@ public abstract class Programa {
    public Exp ctebool(boolean val) {
       return new CteBool(val);  
    }
+   public Exp cteReal(double val) {
+	   return new CteReal(val);
+   }
+   public Exp cteChar(char val) {
+	   return new CteReal(val);
+   }
+   public Exp cteCadena(String val) {
+	   return new CteCadenaChar(val);
+   }
    public Exp conversionEntero(Exp exp1) {
       return new ConversionEntero(exp1);  
    }
@@ -485,9 +511,15 @@ public abstract class Programa {
    public Exp suma(Exp exp1, Exp exp2) {
       return new Suma(exp1, exp2);  
    }
+   public Exp resta(Exp exp1, Exp exp2) {
+	      return new Resta(exp1, exp2);  
+   }
    public Exp multiplicacion(Exp exp1, Exp exp2) {
       return new Multiplicacion(exp1, exp2);  
    }
+   public Exp division(Exp exp1, Exp exp2) {
+	      return new Division(exp1, exp2);  
+	   }
    public Exp modulo(Exp exp1, Exp exp2) {
       return new Modulo(exp1, exp2);  
    }
@@ -500,9 +532,9 @@ public abstract class Programa {
    public Exp suma(Exp exp1, Exp exp2, String enlaceFuente) {
       return new Suma(exp1, exp2, enlaceFuente);  
    }
-   public Exp resta(Exp exp1, Exp exp2) {
-	      return new Resta(exp1, exp2);  
-	   }
+   public Exp resta(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new Resta(exp1, exp2, enlaceFuente);  
+   }
    public Exp and(Exp exp1, Exp exp2, String enlaceFuente) {
       return new And(exp1, exp2, enlaceFuente);  
    }
@@ -512,15 +544,18 @@ public abstract class Programa {
    public Exp multiplicacion(Exp exp1, Exp exp2, String enlaceFuente) {
       return new Multiplicacion(exp1, exp2, enlaceFuente);  
    }
+   public Exp division(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new Division(exp1, exp2, enlaceFuente);  
+	   }
    public Exp elementoDeCadena(Exp exp1, Exp exp2, String enlaceFuente) {
       return new ElementoDeCadena(exp1, exp2, enlaceFuente);  
    }
    public Tipo tipoInt() {return TENT;}
    public Tipo tipoBool() {return TBOOL;}
-   public Tipo tipoOk() {return TOK;}
    public Tipo tipoChar() {return TCHAR;}
    public Tipo tipoReal() {return TREAL;}
-   public Tipo tipoString() {return TSTRING;}
+   public Tipo tipoCadena() {return TSTRING;}
+   public Tipo tipoOk() {return TOK;}
    public Tipo tipoError() {return TERROR;}
    
    public abstract Prog raiz();
