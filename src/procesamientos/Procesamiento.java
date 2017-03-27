@@ -1,7 +1,10 @@
 package procesamientos;
 
 import programa.Programa.CadenaChar;
+import programa.Programa.CambioSigno;
 import programa.Programa.Char;
+import programa.Programa.ConversionBool;
+import programa.Programa.ConversionChar;
 import programa.Programa.ConversionEntero;
 import programa.Programa.ConversionReal;
 import programa.Programa.CteCadenaChar;
@@ -21,9 +24,15 @@ import programa.Programa.DecVar;
 import programa.Programa.Division;
 import programa.Programa.IAsig;
 import programa.Programa.IBloque;
+import programa.Programa.ILee;
 import programa.Programa.IWhile;
+import programa.Programa.Igual;
 import programa.Programa.And;
 import programa.Programa.Int;
+import programa.Programa.Mayor;
+import programa.Programa.MayorIgual;
+import programa.Programa.Menor;
+import programa.Programa.MenorIgual;
 import programa.Programa.Bool;
 import programa.Programa.Error;
 import programa.Programa.Ok;
@@ -47,6 +56,7 @@ public class Procesamiento {
    public void procesa(Multiplicacion multiplicacion) {}
    public void procesa(Division division) {}
    public void procesa(Modulo modulo) {}
+   public void procesa(CambioSigno exp) {}
    public void procesa(ElementoDeCadena elementoDeCadena) {}
    public void procesa(And exp) {} 
    public void procesa(Var exp) {} 
@@ -76,5 +86,20 @@ public class Procesamiento {
     */
    public void procesa(ConversionEntero conversionEntero) {}
    public void procesa(ConversionReal conversionReal) {}
-      
+   public void procesa(ConversionChar conversionChar) {}
+   public void procesa(ConversionBool conversionChar) {}
+   
+   /*
+    * OPERADORES RELACIONALES
+    */
+   public void procesa(Igual igual) {}
+   public void procesa(Menor menor) {}
+   public void procesa(Mayor mayor) {}
+   public void procesa(MenorIgual menorIgual) {}
+   public void procesa(MayorIgual mayorIgual) {}
+
+   /*
+    * E/S
+    */
+   public void procesa(ILee iLee) {}
 }

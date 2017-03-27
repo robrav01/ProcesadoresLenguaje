@@ -9,17 +9,27 @@ import procesamientos.Procesamiento;
 import programa.Programa.ConversionEntero;
 import programa.Programa.ConversionReal;
 import programa.Programa.ElementoDeCadena;
+import programa.Programa.ExpBin;
 import programa.Programa.Modulo;
 import programa.Programa.Multiplicacion;
 import programa.Programa.Suma;
 import programa.Programa.Prog;
+import programa.Programa.Resta;
 import programa.Programa.DecVar;
+import programa.Programa.Division;
 import programa.Programa.IAsig;
 import programa.Programa.IBloque;
+import programa.Programa.ILee;
 import programa.Programa.IWhile;
+import programa.Programa.Igual;
 import programa.Programa.And;
+import programa.Programa.CambioSigno;
 import programa.Programa.Dec;
 import programa.Programa.Inst;
+import programa.Programa.Mayor;
+import programa.Programa.MayorIgual;
+import programa.Programa.Menor;
+import programa.Programa.MenorIgual;
 import programa.Programa.Var;
 
 
@@ -71,32 +81,78 @@ public class Vinculacion extends Procesamiento {
    public boolean error() {
       return error; 
    }
-   public void procesa(And exp) {
-     exp.opnd1().procesaCon(this);
-     exp.opnd2().procesaCon(this);
-   }
+
    public void procesa(Suma exp) {
-     exp.opnd1().procesaCon(this);
-     exp.opnd2().procesaCon(this);
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
    }
+   public void procesa(Resta exp) {
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
+   } 
    public void procesa(Multiplicacion exp) {
-     exp.opnd1().procesaCon(this);
-     exp.opnd2().procesaCon(this);
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
+   }
+   public void procesa(Division exp) {
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
    }
    public void procesa(Modulo exp) {
-	 exp.opnd1().procesaCon(this);
-	 exp.opnd2().procesaCon(this);
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
    }
    public void procesa(ElementoDeCadena exp) {
-	 exp.opnd1().procesaCon(this);
-	 exp.opnd2().procesaCon(this);
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
    }
+   public void procesa(And exp) {
+	  exp.opnd1().procesaCon(this);
+	  exp.opnd2().procesaCon(this);
+   } 
+   
+   public void procesa(Igual exp) {
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+   }
+   public void procesa(Menor exp) {
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+   }
+   public void procesa(Mayor exp) {
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+   }
+   public void procesa(MenorIgual exp) {
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+   }
+   public void procesa(MayorIgual exp) {
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+   }
+  
+   public void procesa(ILee i) {
+	   DecVar decVar = tablaDeSimbolos.get(i.var());
+	     if (decVar == null) {
+	        error = true; 
+	        errores.msg(i.enlaceFuente()+":"+ERROR_ID_NO_DECLARADO+"("+i.var()+")");
+	     }
+	     else {
+	        i.ponDeclaracion(decVar); 
+	     }
+   }
+   
    public void procesa(ConversionEntero exp) {
 	 exp.opnd().procesaCon(this);
    }
    public void procesa(ConversionReal exp) {
 	 exp.opnd().procesaCon(this);
    }
+   public void procesa(CambioSigno exp) {
+	   exp.opnd().procesaCon(this);
+   }
+   
    public void procesa(Var exp) {
      DecVar decVar = tablaDeSimbolos.get(exp.var());
      if (decVar == null) {

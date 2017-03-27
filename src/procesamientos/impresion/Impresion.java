@@ -19,11 +19,17 @@ import programa.Programa.Division;
 import programa.Programa.Exp;
 import programa.Programa.IAsig;
 import programa.Programa.IBloque;
+import programa.Programa.ILee;
 import programa.Programa.Inst;
+import programa.Programa.Mayor;
+import programa.Programa.MayorIgual;
+import programa.Programa.Menor;
+import programa.Programa.MenorIgual;
 import programa.Programa.Prog;
 import programa.Programa.Resta;
 import programa.Programa.Var;
 import programa.Programa.IWhile;
+import programa.Programa.Igual;
 
 
 public class Impresion extends Procesamiento {
@@ -123,6 +129,48 @@ public class Impresion extends Procesamiento {
 	 exp.opnd2().procesaCon(this);
 	 System.out.print(')'); 
    }
+   public void procesa(Igual exp) {
+	 System.out.print('('); 
+	 exp.opnd1().procesaCon(this);
+	 System.out.print("==");
+	 imprimeAtributos(exp);
+	 exp.opnd2().procesaCon(this);
+	 System.out.print(')'); 
+   }
+   public void procesa(Menor exp) {
+	 System.out.print('('); 
+	 exp.opnd1().procesaCon(this);
+	 System.out.print("<");
+	 imprimeAtributos(exp);
+	 exp.opnd2().procesaCon(this);
+	 System.out.print(')'); 
+   }
+   public void procesa(Mayor exp) {
+	 System.out.print('('); 
+	 exp.opnd1().procesaCon(this);
+	 System.out.print(">");
+	 imprimeAtributos(exp);
+	 exp.opnd2().procesaCon(this);
+	 System.out.print(')'); 
+   }
+   
+   public void procesa(MenorIgual exp) {
+		 System.out.print('('); 
+		 exp.opnd1().procesaCon(this);
+		 System.out.print("<=");
+		 imprimeAtributos(exp);
+		 exp.opnd2().procesaCon(this);
+		 System.out.print(')'); 
+	   }
+   public void procesa(MayorIgual exp) {
+		 System.out.print('('); 
+		 exp.opnd1().procesaCon(this);
+		 System.out.print(">=");
+		 imprimeAtributos(exp);
+		 exp.opnd2().procesaCon(this);
+		 System.out.print(')'); 
+	   }
+	   
    public void procesa(And exp) {
      System.out.print('('); 
      exp.opnd1().procesaCon(this);
@@ -168,7 +216,12 @@ public class Impresion extends Procesamiento {
       i.exp().procesaCon(this);
       imprimeAtributos(i);
       System.out.println(); 
-   }     
+   }   
+   public void procesa(ILee i) {
+	  System.out.print("leer " + i.var());
+	  imprimeAtributos(i);
+	  System.out.println(); 
+   } 
    public void procesa(IBloque b) {
       identa(); 
       System.out.println("{");

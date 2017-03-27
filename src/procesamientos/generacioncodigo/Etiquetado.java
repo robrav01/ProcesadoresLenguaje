@@ -16,9 +16,16 @@ import programa.Programa.Multiplicacion;
 import programa.Programa.Resta;
 import programa.Programa.Suma;
 import programa.Programa.And;
+import programa.Programa.CambioSigno;
 import programa.Programa.Prog;
 import programa.Programa.IBloque;
+import programa.Programa.ILee;
 import programa.Programa.IWhile;
+import programa.Programa.Igual;
+import programa.Programa.Mayor;
+import programa.Programa.MayorIgual;
+import programa.Programa.Menor;
+import programa.Programa.MenorIgual;
 import programa.Programa.IAsig;
 import programa.Programa.Var;
 
@@ -97,6 +104,42 @@ public class Etiquetado extends Procesamiento {
        exp.ponDirInstruccionSiguiente(++etq);
    } 
    
+   public void procesa(Igual exp) {
+	   exp.ponDirPrimeraInstruccion(etq);
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+	   
+	   exp.ponDirInstruccionSiguiente(++etq);
+   }
+   public void procesa(Menor exp) {
+	   exp.ponDirPrimeraInstruccion(etq);
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+	   
+	   exp.ponDirInstruccionSiguiente(++etq);
+   }
+   public void procesa(Mayor exp) {
+	   exp.ponDirPrimeraInstruccion(etq);
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+	   
+	   exp.ponDirInstruccionSiguiente(++etq);
+   }
+   public void procesa(MenorIgual exp) {
+	   exp.ponDirPrimeraInstruccion(etq);
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+	   
+	   exp.ponDirInstruccionSiguiente(++etq);
+   }
+   public void procesa(MayorIgual exp) {
+	   exp.ponDirPrimeraInstruccion(etq);
+	   exp.opnd1().procesaCon(this);
+	   exp.opnd2().procesaCon(this);
+	   
+	   exp.ponDirInstruccionSiguiente(++etq);
+   }
+   
    public void procesa(ElementoDeCadena exp) {
        exp.ponDirPrimeraInstruccion(etq);
        exp.opnd1().procesaCon(this);
@@ -121,6 +164,12 @@ public class Etiquetado extends Procesamiento {
        exp.ponDirPrimeraInstruccion(etq);
        exp.opnd().procesaCon(this);
        
+       exp.ponDirInstruccionSiguiente(++etq);
+   }
+   
+   public void procesa(CambioSigno exp) {
+       exp.ponDirPrimeraInstruccion(etq);
+       exp.opnd().procesaCon(this);
        exp.ponDirInstruccionSiguiente(++etq);
    }
    
@@ -149,4 +198,8 @@ public class Etiquetado extends Procesamiento {
       etq++;
       i.ponDirInstruccionSiguiente(etq);
    }     
+   public void procesa(ILee i) {
+	   i.ponDirPrimeraInstruccion(etq);
+	   i.ponDirInstruccionSiguiente(++etq);
+   }
 }
