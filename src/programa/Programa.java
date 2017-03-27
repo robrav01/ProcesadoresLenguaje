@@ -1,6 +1,7 @@
 package programa;
 
 import procesamientos.Procesamiento;
+import programa.Programa.DecVar;
 
 public abstract class Programa {
    private final Tipo TENT;
@@ -148,6 +149,36 @@ public abstract class Programa {
      }
      
      public abstract void procesaCon(Procesamiento p); 
+   }
+   
+   public class ILee extends Inst {
+	private String var;		// Variable sobre la que se proyectara el valor leido
+	private DecVar declaracion;	// Declaracion de la variable
+	private Exp valor;
+	private String enlaceFuente;
+	public ILee(String var,String enlaceFuente){
+		this.var = var;
+		this.enlaceFuente = enlaceFuente;
+	}
+	public ILee(String var) {
+		this(var,null);
+	}
+	public DecVar declaracion() {
+        return declaracion;
+    }
+    public String enlaceFuente() {
+        return enlaceFuente;
+    }
+    public String var(){
+    	return var;
+    }
+	@Override
+	public void procesaCon(Procesamiento p) {
+		p.procesa(this);
+	}
+	public void ponDeclaracion(DecVar d) {
+		 declaracion = d; 
+	}
    }
 
    
@@ -353,6 +384,57 @@ public abstract class Programa {
        }
    }
    
+   public class ConversionChar extends Exp {
+	   private Exp opnd;
+       private String enlaceFuente;
+       public ConversionChar(Exp opnd) {
+    	   this(opnd,null);
+       }
+       public ConversionChar(Exp opnd,String enlaceFuente) {
+	      this.enlaceFuente = enlaceFuente; 
+	      this.opnd = opnd;
+	     }
+       public Exp opnd() {return opnd;}
+       public String enlaceFuente() {return enlaceFuente;}     
+       public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
+   public class CambioSigno extends Exp {
+	   private Exp opnd;
+       private String enlaceFuente;
+       public CambioSigno(Exp opnd) {
+    	   this(opnd,null);
+       }
+       public CambioSigno(Exp opnd,String enlaceFuente) {
+	      this.enlaceFuente = enlaceFuente; 
+	      this.opnd = opnd;
+	     }
+       public Exp opnd() {return opnd;}
+       public String enlaceFuente() {return enlaceFuente;}     
+       public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
+   public class ConversionBool extends Exp {
+	   private Exp opnd;
+       private String enlaceFuente;
+       public ConversionBool(Exp opnd) {
+    	   this(opnd,null);
+       }
+       public ConversionBool(Exp opnd,String enlaceFuente) {
+	      this.enlaceFuente = enlaceFuente; 
+	      this.opnd = opnd;
+	     }
+       public Exp opnd() {return opnd;}
+       public String enlaceFuente() {return enlaceFuente;}     
+       public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
    public abstract class ExpBin extends Exp {
        private Exp opnd1;
        private Exp opnd2;
@@ -428,6 +510,69 @@ public abstract class Programa {
        }
    }
    
+   /*
+    *	OPERADORES RELACIONALES 
+    */
+   public class Igual extends ExpBin {
+       public Igual(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public Igual(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
+   public class Menor extends ExpBin {
+       public Menor(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public Menor(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
+   public class Mayor extends ExpBin {
+       public Mayor(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public Mayor(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
+   public class MenorIgual extends ExpBin {
+       public MenorIgual(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public MenorIgual(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
+   public class MayorIgual extends ExpBin {
+       public MayorIgual(Exp opnd1, Exp opnd2) {
+         this(opnd1,opnd2,null);
+       }
+       public MayorIgual(Exp opnd1, Exp opnd2,String enlaceFuente) {
+         super(opnd1,opnd2,enlaceFuente);  
+       }
+      public void procesaCon(Procesamiento p) {
+          p.procesa(this); 
+       }
+   }
+   
    public class ElementoDeCadena extends ExpBin {
        public ElementoDeCadena(Exp opnd1, Exp opnd2) {
          this(opnd1,opnd2,null);
@@ -480,7 +625,12 @@ public abstract class Programa {
    public Inst iwhile(Exp exp, Inst cuerpo, String enlaceFuente) {
       return new IWhile(exp,cuerpo,enlaceFuente);  
    }
-
+   public Inst lee(String var) {
+	   return new ILee(var);
+   }
+   public Inst lee(String var, String enlaceFuente) {
+	   return new ILee(var,enlaceFuente);
+   }
    public Exp var(String id) {
       return new Var(id);  
    }
@@ -514,6 +664,21 @@ public abstract class Programa {
    public Exp resta(Exp exp1, Exp exp2) {
 	      return new Resta(exp1, exp2);  
    }
+   public Exp igual(Exp exp1, Exp exp2) {
+	      return new Igual(exp1, exp2);  
+   }
+   public Exp menor(Exp exp1, Exp exp2) {
+	      return new Menor(exp1, exp2);  
+   }
+   public Exp mayor(Exp exp1, Exp exp2) {
+	      return new Mayor(exp1, exp2);  
+   }
+   public Exp menorIgual(Exp exp1, Exp exp2) {
+	      return new MenorIgual(exp1, exp2);  
+   }
+   public Exp mayorIgual(Exp exp1, Exp exp2) {
+	      return new MayorIgual(exp1, exp2);  
+   }
    public Exp multiplicacion(Exp exp1, Exp exp2) {
       return new Multiplicacion(exp1, exp2);  
    }
@@ -535,6 +700,21 @@ public abstract class Programa {
    public Exp resta(Exp exp1, Exp exp2, String enlaceFuente) {
 	      return new Resta(exp1, exp2, enlaceFuente);  
    }
+   public Exp igual(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new Igual(exp1, exp2, enlaceFuente);  
+   }
+   public Exp menor(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new Menor(exp1, exp2, enlaceFuente);  
+   }
+   public Exp mayor(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new Mayor(exp1, exp2, enlaceFuente);  
+   }
+   public Exp menorIgual(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new MenorIgual(exp1, exp2, enlaceFuente);  
+   }
+   public Exp mayorIgual(Exp exp1, Exp exp2, String enlaceFuente) {
+	      return new MayorIgual(exp1, exp2, enlaceFuente);  
+   }
    public Exp and(Exp exp1, Exp exp2, String enlaceFuente) {
       return new And(exp1, exp2, enlaceFuente);  
    }
@@ -550,6 +730,7 @@ public abstract class Programa {
    public Exp elementoDeCadena(Exp exp1, Exp exp2, String enlaceFuente) {
       return new ElementoDeCadena(exp1, exp2, enlaceFuente);  
    }
+  
    public Tipo tipoInt() {return TENT;}
    public Tipo tipoBool() {return TBOOL;}
    public Tipo tipoChar() {return TCHAR;}
